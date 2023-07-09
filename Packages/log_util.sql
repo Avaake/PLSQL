@@ -37,7 +37,7 @@ create or replace PACKAGE BODY log_util AS
             v_text := p_text;
         END IF;
         
-        to_log(p_appl_proc => p_proc_name, p_message => p_text);
+        to_log(p_appl_proc => p_proc_name, p_message => v_text);
         
     END log_start;
     
@@ -54,7 +54,7 @@ create or replace PACKAGE BODY log_util AS
             v_text := P_text;
         END IF;
         
-        to_log(p_appl_proc => p_proc_name, p_message => p_text);
+        to_log(p_appl_proc => p_proc_name, p_message => v_text);
     
     END log_finish;
     
@@ -72,7 +72,7 @@ create or replace PACKAGE BODY log_util AS
             v_text := p_text;
         END IF;
         
-        to_log(p_appl_proc => p_proc_name, p_message => p_text);
+        to_log(p_appl_proc => p_proc_name, p_message => v_text);
     
     END log_error;
         
