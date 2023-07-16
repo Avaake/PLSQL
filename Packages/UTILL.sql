@@ -39,7 +39,7 @@ create or replace PACKAGE BODY utill AS
         BEGIN 
             INSERT INTO employees_history (first_name, last_name, job_id, department_id)
             VALUES (p_first_name, p_last_name, p_job_id, p_dep_id);
-            --COMMIT;
+            COMMIT;
         
             DBMS_OUTPUT.PUT_LINE('Співробітник ' || p_first_name || ',' || p_last_name ||', КОД ПОСАДИ: ' || p_job_id ||', ІД ДЕПАРТАМЕНТУ: ' || p_dep_id ||' дадано в таблицю employees_history');
         EXCEPTION
@@ -120,7 +120,7 @@ create or replace PACKAGE BODY utill AS
             INSERT INTO employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id) 
             VALUES (v_employee_id, p_first_name, p_last_name,p_email,p_phone_number, p_hire_date, p_job_id, p_salary, p_commission_pct, p_manager_id, p_department_id);
     
-            --COMMIT;
+            COMMIT;
             DBMS_OUTPUT.PUT_LINE('Співробітник ' || p_first_name || ',' || p_last_name ||', КОД ПОСАДИ: ' || p_job_id ||', ІД ДЕПАРТАМЕНТУ: ' || p_department_id ||' успішно додано до системи');
          EXCEPTION
             WHEN OTHERS THEN
@@ -172,7 +172,7 @@ create or replace PACKAGE BODY utill AS
                              p_last_name  => v_last_name, 
                              p_job_id     => v_job_id, 
                              p_dep_id     => v_dep_id);
-            --COMMIT;
+            COMMIT;
             
         EXCEPTION
             WHEN OTHERS THEN
