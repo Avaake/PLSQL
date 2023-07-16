@@ -13,6 +13,17 @@ create or replace PACKAGE utill AS
     
     PROCEDURE fire_an_employee (p_employee_id IN NUMBER);
     
+    PROCEDURE change_attribute_employee ( p_employee_id    IN VARCHAR2,
+                                          p_first_name     IN VARCHAR2 DEFAULT NULL,
+                                          p_last_name      IN VARCHAR2 DEFAULT NULL,
+                                          p_email          IN VARCHAR2 DEFAULT NULL,
+                                          p_phone_number   IN VARCHAR2 DEFAULT NULL,
+                                          p_job_id         IN VARCHAR2 DEFAULT NULL,
+                                          P_salary         IN NUMBER   DEFAULT NULL,
+                                          p_commission_pct IN VARCHAR2 DEFAULT NULL,
+                                          p_manager_id     IN NUMBER   DEFAULT NULL,
+                                          p_department_id  IN NUMBER   DEFAULT NULL );
+    
 END utill;
 
 create or replace PACKAGE BODY utill AS
@@ -173,6 +184,52 @@ create or replace PACKAGE BODY utill AS
         log_util.log_finish(p_proc_name => 'fire_an_employee');
     
     END fire_an_employee;
+    
+    PROCEDURE change_attribute_employee ( p_employee_id    IN VARCHAR2,
+                                                        p_first_name     IN VARCHAR2 DEFAULT NULL,
+                                                        p_last_name      IN VARCHAR2 DEFAULT NULL,
+                                                        p_email          IN VARCHAR2 DEFAULT NULL,
+                                                        p_phone_number   IN VARCHAR2 DEFAULT NULL,
+                                                        p_job_id         IN VARCHAR2 DEFAULT NULL,
+                                                        P_salary         IN NUMBER   DEFAULT NULL,
+                                                        p_commission_pct IN VARCHAR2 DEFAULT NULL,
+                                                        p_manager_id     IN NUMBER   DEFAULT NULL,
+                                                        p_department_id  IN NUMBER   DEFAULT NULL ) IS
+    BEGIN
+        log_util.log_start(p_proc_name => 'change_attribute_employee');
+    
+        IF (p_first_name    IS NOT NULL OR p_last_name  IS NOT NULL OR p_email         IS NOT NULL OR
+           p_phone_number   IS NOT NULL OR p_job_id     IS NOT NULL OR P_salary        IS NOT NULL OR
+           p_commission_pct IS NOT NULL OR p_manager_id IS NOT NULL OR p_department_id IS NOT NULL  ) THEN
+           
+            EXECUTE IMMEDIATE '
+                UPDATE employees
+                SET first_name = NVL(:p_first_name, first_name),
+                    last_name = NVL(:p_last_name, last_name),
+                    email = NVL(:p_email, email),
+                    phone_number = NVL(:p_phone_number, phone_number),
+                    job_id = NVL(:p_job_id, job_id),
+                    salary = NVL(:p_salary, salary),
+                    commission_pct = NVL(:p_commission_pct, commission_pct),
+                    manager_id = NVL(:p_manager_id, manager_id),
+                    department_id = NVL(:p_department_id, department_id)
+                WHERE employee_id = :p_employee_id'
+            USING p_first_name, p_last_name, p_email, p_phone_number, p_job_id, P_salary, p_commission_pct, p_manager_id, p_department_id, p_employee_id;
+    
+            DBMS_OUTPUT.PUT_LINE('У співробітника ' || p_employee_id || ' успішно оновлені атрибути');
+        ELSE
+        
+            RAISE_APPLICATION_ERROR (-20001, 'Принаймні один параметр (крім p_employee_id) повинен мати значення, відмінне від NULL.');
+            log_util.log_finish(p_proc_name => 'change_attribute_employee');
+            
+        END IF;
+    
+    EXCEPTION
+        WHEN OTHERS THEN
+            log_util.log_error(p_proc_name => 'change_attribute_employee', p_sqlerrm => SQLERRM);
+            RAISE;
+        
+END change_attribute_employee;
 
     
     
